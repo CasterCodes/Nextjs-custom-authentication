@@ -1,16 +1,18 @@
 "use client";
 
-import { createUserAccount } from "@/app/actions/accounts";
+import { AccountInitialState, createUserAccount } from "@/app/actions/accounts";
 import Link from "next/link";
 import React from "react";
 import { useFormState } from "react-dom";
+import FormFieldError from "../shared/form-field-error";
 
 const CreateAccountForm = () => {
-  const initialState = { errors: {}, message: null };
+  const initialState: AccountInitialState = { errors: {}, message: null };
 
   const [state, handler] = useFormState(createUserAccount, initialState);
 
   console.log({ state });
+
   return (
     <form action={handler} className="mt-8 grid grid-cols-6 gap-6">
       <div className="col-span-6 sm:col-span-3">
@@ -27,6 +29,7 @@ const CreateAccountForm = () => {
           name="firstName"
           className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
         />
+        <FormFieldError messages={state?.errors?.firstName} />
       </div>
 
       <div className="col-span-6 sm:col-span-3">
@@ -43,6 +46,7 @@ const CreateAccountForm = () => {
           name="lastName"
           className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
         />
+        <FormFieldError messages={state?.errors?.lastName} />
       </div>
 
       <div className="col-span-6">
@@ -60,6 +64,8 @@ const CreateAccountForm = () => {
           name="email"
           className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
         />
+
+        <FormFieldError messages={state?.errors?.email} />
       </div>
 
       <div className="col-span-6 sm:col-span-3">
@@ -77,6 +83,7 @@ const CreateAccountForm = () => {
           name="password"
           className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
         />
+        <FormFieldError messages={state?.errors?.password} />
       </div>
 
       <div className="col-span-6 sm:col-span-3">
@@ -93,6 +100,7 @@ const CreateAccountForm = () => {
           name="confirmPassword"
           className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
         />
+        <FormFieldError messages={state?.errors?.confirmPassword} />
       </div>
 
       <div className="col-span-6">
