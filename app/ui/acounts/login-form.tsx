@@ -3,18 +3,16 @@ import Link from "next/link";
 import React from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import FormFieldError from "../shared/form-field-error";
+import AccountsFormSubmitButton from "./accounts_form_submit_button";
 
 const LoginForm = () => {
   const initialState: AccountInitialState = {
     errors: {},
     message: null,
   };
+
   const [state, handler] = useFormState(loginUser, initialState);
-  const { pending } = useFormStatus();
 
-  console.log({ pending });
-
-  console.log({ state });
   return (
     <form action={handler} className="mt-8 grid grid-cols-6 gap-6">
       <div className="col-span-6">
@@ -54,13 +52,7 @@ const LoginForm = () => {
       </div>
 
       <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
-        <button
-          aria-disabled={pending}
-          className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
-        >
-          {pending ? "Loading" : " Login"}
-        </button>
-
+        <AccountsFormSubmitButton title="Login" />
         <p className="mt-4 text-sm text-gray-500 sm:mt-0">
           Don't have account yet?
           <Link href="/accounts/create" className="text-gray-700 underline">

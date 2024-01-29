@@ -8,6 +8,16 @@ export async function POST(request: NextRequest) {
 
     const user = await User.findOne({ email });
 
+    if (!user.isEmailVerified) {
+      return NextResponse.json(
+        {
+          status: "fail",
+          message: "Email not verified",
+        },
+        { status: 400 }
+      );
+    }
+
     const correctPassword = await user?.comparePassword(password);
 
     if (!user || !correctPassword) {

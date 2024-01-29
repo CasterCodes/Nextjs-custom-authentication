@@ -1,6 +1,9 @@
+import { currentAccount } from "@/app/lib/account";
 import React from "react";
 
-const ProfilePage = () => {
+const ProfilePage = async () => {
+  const { user, error, message } = await currentAccount();
+
   return (
     <section className="flex flex-row ">
       <div className="flex h-screen flex-col justify-between border-e bg-white">
@@ -149,15 +152,33 @@ const ProfilePage = () => {
 
             <div>
               <p className="text-xs">
-                <strong className="block font-medium">Eric Frusciante</strong>
+                <strong className="block font-medium">
+                  {`${user?.firstName}  ${user?.lastName}`}
+                </strong>
 
-                <span> eric@frusciante.com </span>
+                <span> {user?.email}</span>
               </p>
             </div>
           </a>
         </div>
       </div>
-      <div className="p-4"> User Profile</div>
+      <div className="p-4 flex flex-grow flex-col">
+        <h2 className="text-3xl font-bold text-gray-600">User Profile</h2>
+        <div className="mt-8 flex flex-col space-y-2">
+          <h2 className="text-2xl">
+            <strong>Full Name : </strong>{" "}
+            {`${user?.firstName}  ${user?.lastName}`}
+          </h2>
+          <h2 className="text-2xl">
+            <strong>Email : </strong> {`${user?.email}`}
+          </h2>
+        </div>
+        {error && (
+          <>
+            <h2>{message}</h2>
+          </>
+        )}
+      </div>
     </section>
   );
 };

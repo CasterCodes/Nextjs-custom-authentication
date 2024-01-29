@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { NextRequest } from "next/server";
 
 export function signToken(
   tokenType: "refresh" | "access",
@@ -7,7 +8,7 @@ export function signToken(
   return jwt.sign(data, "secret_key", {
     expiresIn:
       tokenType === "access"
-        ? "10m"
+        ? "1d"
         : tokenType === "refresh"
         ? "30d"
         : undefined,
@@ -27,4 +28,16 @@ export function verifyToken(token: string) {
       verified: null,
     };
   }
+}
+
+export function getAccessToken(request: NextRequest) {
+  let token = "";
+
+  const accessToken = request.cookies.get("access_token_auth") || "";
+
+  if (accessToken) {
+    return accessToken.value;
+  }
+
+  return token;
 }

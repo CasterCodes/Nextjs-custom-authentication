@@ -6,6 +6,7 @@ import axios from "axios";
 import { permanentRedirect, redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 import { z } from "zod";
+import { setCookie } from "../lib/cookie";
 
 const AccountSchema = z.object({
   firstName: z
@@ -127,16 +128,15 @@ export async function loginUser(
       validatedFields.data
     );
 
+    console.log({ response });
+
     if (response.data.status === "fail") {
       return {
         message: response.data.message,
       };
     }
-    cookies().set({
-      name: "access_token_auth",
-      value: response.data.accessToken,
-      httpOnly: true,
-    });
+
+    setCookie("access_token_auth", response.data.accessToken);
   } catch (error) {
     return {
       message: "Error login",

@@ -1,7 +1,6 @@
 import databaseConnection from "@/database.config";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
-import { Document } from "mongoose";
 
 databaseConnection();
 
@@ -27,7 +26,9 @@ const userSchema = new mongoose.Schema(
     },
 
     isEmailVerified: {
-      type: String,
+      type: Boolean,
+      required: true,
+      default: false,
     },
 
     role: {
