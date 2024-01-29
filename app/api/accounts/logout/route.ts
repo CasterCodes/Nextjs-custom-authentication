@@ -8,4 +8,6 @@ export async function POST(request: NextRequest) {
     accessToken: "",
     message: "Logout  successfull",
   });
+
+  return response;
 }

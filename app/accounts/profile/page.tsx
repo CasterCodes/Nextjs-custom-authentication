@@ -1,3 +1,4 @@
+import { logout } from "@/app/actions/accounts";
 import { currentAccount } from "@/app/lib/account";
 import React from "react";
 
@@ -124,7 +125,7 @@ const ProfilePage = async () => {
                   </li>
 
                   <li>
-                    <form action="/logout">
+                    <form action={logout}>
                       <button
                         type="submit"
                         className="w-full rounded-lg px-4 py-2 text-sm font-medium text-gray-500 [text-align:_inherit] hover:bg-gray-100 hover:text-gray-700"

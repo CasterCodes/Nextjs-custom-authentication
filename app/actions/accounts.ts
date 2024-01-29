@@ -1,12 +1,22 @@
 "use server";
 
-import { cookies } from "next/headers";
 
 import axios from "axios";
-import { permanentRedirect, redirect } from "next/navigation";
-import { NextRequest } from "next/server";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { setCookie } from "../lib/cookie";
+
+export type AccountInitialState = {
+  errors?: {
+    firstName?: string[];
+    lastName?: string[];
+    email?: string[];
+    password?: string[];
+    confirmPassword?: string[];
+  };
+
+  message?: string | null;
+};
 
 const AccountSchema = z.object({
   firstName: z
@@ -54,18 +64,6 @@ const LoginUser = AccountSchema.omit({
   lastName: true,
   confirmPassword: true,
 });
-
-export type AccountInitialState = {
-  errors?: {
-    firstName?: string[];
-    lastName?: string[];
-    email?: string[];
-    password?: string[];
-    confirmPassword?: string[];
-  };
-
-  message?: string | null;
-};
 
 export async function createUserAccount(
   prevState: AccountInitialState,
@@ -128,8 +126,6 @@ export async function loginUser(
       validatedFields.data
     );
 
-    console.log({ response });
-
     if (response.data.status === "fail") {
       return {
         message: response.data.message,
@@ -144,4 +140,26 @@ export async function loginUser(
   }
 
   redirect("/accounts/profile");
+}
+
+export async function logout() {
+  try {
+    const response = await axios.post(
+      `${process.env.ROOT_URL}/api/accounts/logout`
+    );
+
+    if (response.data.status === "fail") {
+      return {
+        message: response.data.message,
+      };
+    }
+
+    setCookie("access_token_auth", "");
+  } catch (error) {
+    return {
+      message: "Logout failed",
+    };
+  }
+
+  redirect("/accounts/login");
 }
