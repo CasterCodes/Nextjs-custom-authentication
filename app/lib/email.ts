@@ -13,6 +13,7 @@ const sendMail = async (data: EmailOptions) => {
     const { from, to, subject, text, html } = data;
 
     const transporter = nodemailer.createTransport({
+      // @ts-ignore
       host: process.env.MAIL_HOST!,
       port: process.env.MAIL_PORT,
       auth: {
