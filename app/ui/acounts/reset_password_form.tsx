@@ -14,6 +14,7 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
     message: null,
   };
 
+  // @ts-ignore
   const [state, handler] = useFormState(resetPassword, initialState);
   return (
     <>

@@ -18,6 +18,8 @@ const ForgotPasswordPage = ({
     errors: {},
     message: null,
   };
+
+  // @ts-ignore
   const [state, handler] = useFormState(forgotPassword, initialState);
 
   console.log({ state });

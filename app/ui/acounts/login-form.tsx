@@ -1,7 +1,7 @@
 import { AccountInitialState, loginUser } from "@/app/actions/accounts";
 import Link from "next/link";
 import React from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormState } from "react-dom";
 import FormFieldError from "../shared/form-field-error";
 import AccountsFormSubmitButton from "./accounts_form_submit_button";
 import AccountFormError from "./account-form-error";
@@ -12,6 +12,7 @@ const LoginForm = () => {
     message: null,
   };
 
+  // @ts-ignore
   const [state, handler] = useFormState(loginUser, initialState);
 
   return (

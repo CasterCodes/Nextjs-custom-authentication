@@ -9,6 +9,7 @@ import AccountFormError from "./account-form-error";
 
 const ChangePasswordForm = () => {
   const initialState: AccountInitialState = { errors: {}, message: null };
+  // @ts-ignore
   const [state, handler] = useFormState(changePassword, initialState);
 
   return (

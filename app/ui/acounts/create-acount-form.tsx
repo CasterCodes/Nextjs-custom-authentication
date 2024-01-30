@@ -11,6 +11,7 @@ import AccountFormError from "./account-form-error";
 const CreateAccountForm = () => {
   const initialState: AccountInitialState = { errors: {}, message: null };
 
+  // @ts-ignore
   const [state, handler] = useFormState(createUserAccount, initialState);
 
   return (
