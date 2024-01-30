@@ -57,7 +57,7 @@ const LoginForm = () => {
         <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
           <AccountsFormSubmitButton title="Login" />
           <p className="mt-4 text-sm text-gray-500 sm:mt-0">
-            Don't have account yet?
+            Don&apos;t have account yet?
             <Link href="/accounts/create" className="text-gray-700 underline">
               Create Account
             </Link>

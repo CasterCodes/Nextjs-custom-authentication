@@ -42,15 +42,18 @@ To run the project locally, follow these steps:
    
    Open your web browser and navigate to http://localhost:3000.
 
-Contributing:
+## Contributing
 Contributions to the project are welcome! If you'd like to contribute, please follow these steps:
 
-Fork the repository.
-Create a new branch for your feature or bug fix.
-Make your changes and ensure they adhere to the project's coding style and conventions.
-Test your changes thoroughly.
-Commit your changes with clear and descriptive messages.
-Push your changes to your fork.
-Submit a pull request to the main repository's main branch.
-Feel free to explore the codebase, report issues, or suggest new features. Your contributions help make this project better for everyone!
+1. Fork the repository.
+1. Create a new branch for your feature or bug fix.
+1. Make your changes 
+1. Test your changes thoroughly.
+1. Commit your changes with clear and descriptive messages.
+1. Push your changes to your fork.
+1.Submit a pull request to the main repository's main branch.
+
+
+
+Feel free to explore the codebase, report issues, or suggest new features. Your contributions help make another developer learn something from the project
 
