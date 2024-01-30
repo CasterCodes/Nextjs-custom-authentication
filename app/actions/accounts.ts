@@ -1,10 +1,8 @@
 "use server";
-
-
 import axios from "axios";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { setCookie } from "../lib/cookie";
+import { deleteCookie, getCookie, setCookie } from "../lib/cookie";
 
 export type AccountInitialState = {
   errors?: {
@@ -12,6 +10,7 @@ export type AccountInitialState = {
     lastName?: string[];
     email?: string[];
     password?: string[];
+    token?: string[];
     confirmPassword?: string[];
   };
 
@@ -40,6 +39,7 @@ const AccountSchema = z.object({
     })
     .trim(),
 
+  token: z.string(),
   email: z.string().email({ message: "Provide a valid email" }),
   password: z
     .string({
@@ -51,7 +51,7 @@ const AccountSchema = z.object({
   }),
 });
 
-const CreateUserAccount = AccountSchema.refine(
+const CreateUserAccount = AccountSchema.omit({ token: true }).refine(
   (schema) => schema.confirmPassword === schema.password,
   {
     message: "Passwords don't match",
@@ -62,6 +62,31 @@ const CreateUserAccount = AccountSchema.refine(
 const LoginUser = AccountSchema.omit({
   firstName: true,
   lastName: true,
+  token: true,
+  confirmPassword: true,
+});
+
+const ResetPasswod = AccountSchema.omit({
+  firstName: true,
+  lastName: true,
+  email: true,
+}).refine((schema) => schema.confirmPassword === schema.password, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
+
+const ChangePassword = AccountSchema.omit({
+  firstName: true,
+  lastName: true,
+  email: true,
+  token: true,
+});
+
+const ForgotPassword = AccountSchema.omit({
+  firstName: true,
+  lastName: true,
+  password: true,
+  token: true,
   confirmPassword: true,
 });
 
@@ -154,10 +179,133 @@ export async function logout() {
       };
     }
 
-    setCookie("access_token_auth", "");
+    deleteCookie("access_token_auth");
   } catch (error) {
     return {
       message: "Logout failed",
+    };
+  }
+
+  redirect("/accounts/login");
+}
+
+export async function resetPassword(
+  formState: AccountInitialState,
+  formData: FormData
+) {
+  const validatedFields = ResetPasswod.safeParse({
+    password: formData.get("password"),
+    token: formData.get("token"),
+    confirmPassword: formData.get("confirmPassword"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Some required field are empty",
+    };
+  }
+
+  try {
+    const response = await axios.post(
+      `${process.env.ROOT_URL}/api/accounts/password/reset`,
+      validatedFields.data
+    );
+
+    if (response.data.status === "fail") {
+      return {
+        message: response.data.message,
+      };
+    }
+  } catch (error) {
+    return {
+      message: "Password reset failed",
+    };
+  }
+
+  redirect("/accounts/login");
+}
+
+export async function forgotPassword(
+  formState: AccountInitialState,
+  formData: FormData
+) {
+  const validatedFields = ForgotPassword.safeParse({
+    email: formData.get("email"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Some field are invalid",
+    };
+  }
+
+  try {
+    const response = await axios.post(
+      `${process.env.ROOT_URL}/api/accounts/password/forgot`,
+      validatedFields.data
+    );
+
+    if (response.data.status === "fail") {
+      return {
+        message: response.data.message,
+      };
+    }
+  } catch (error) {
+    console.log({ ERROR_RESET_INSTRUCTIONS: error });
+    return {
+      message: "Error sending reset instructions",
+    };
+  }
+
+  redirect("/accounts/password/forgot?instructions_sent=true");
+}
+
+export async function changePassword(
+  formState: AccountInitialState,
+  formData: FormData
+) {
+  const validatedFields = ChangePassword.safeParse({
+    password: formData.get("password"),
+    confirmPassword: formData.get("confirmPassword"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Some required field are empty",
+    };
+  }
+
+  try {
+    // Request expects currentPassword and newPassword
+
+    const data = {
+      currentPassword: validatedFields.data.password,
+      newPassword: validatedFields.data.confirmPassword,
+    };
+    const response = await axios.post(
+      `${process.env.ROOT_URL}/api/accounts/password/change`,
+      data,
+      {
+        headers: {
+          Cookie: `access_token_auth=${getCookie("access_token_auth")}`,
+        },
+      }
+    );
+
+    if (response.data.status === "fail") {
+      return {
+        message: response.data.message,
+      };
+    }
+
+    deleteCookie("access_token_auth");
+  } catch (error: any) {
+    console.log({ PASSWORD_CHANGE_ERROR: error });
+    return {
+      message: error.message,
     };
   }
 

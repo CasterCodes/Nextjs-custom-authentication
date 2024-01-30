@@ -11,3 +11,8 @@ export function setCookie(cookieName: string, cookieValue: string) {
     httpOnly: true,
   });
 }
+
+
+export function deleteCookie(cookieName: string) {
+  cookies().delete(cookieName);
+}

@@ -11,13 +11,10 @@ export async function POST(request: NextRequest) {
     const emailTaken = await User.findOne({ email });
 
     if (emailTaken)
-      return NextResponse.json(
-        {
-          status: "fail",
-          message: "Email associated with account",
-        },
-        { status: 400 }
-      );
+      return NextResponse.json({
+        status: "fail",
+        message: "Email associated with another account",
+      });
 
     // NOTE: password is hashed in the mongoose pre middleware
     const user = await User.create({ email, firstName, lastName, password });

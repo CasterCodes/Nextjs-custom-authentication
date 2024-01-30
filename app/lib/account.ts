@@ -35,7 +35,7 @@ export async function isAuthenticatedOrAuthorized(roles: string[]): Promise<{
   // for this function to be called there has to be a access_token in the middleware
   let accessToken = getCookie("access_token_auth");
 
-  const { valid, verified, expired }: any = verifyToken(accessToken!);
+  const { valid, verified }: any = verifyToken(accessToken!);
 
   if (!valid) {
     return {

@@ -15,7 +15,10 @@ const VerifyEmailPage = () => {
   const verified = search.get("verified");
 
   useEffect(() => {
+    const verificationRun = verified === "true" || verified === "false";
     const verifyEmail = async () => {
+      // if token has been checked once
+      if (verificationRun) return;
       try {
         setLoading(true);
         const response = await axios.post("/api/accounts/verify_email", {

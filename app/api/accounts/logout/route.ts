@@ -1,8 +1,8 @@
-import { setCookie } from "@/app/lib/cookie";
+import { deleteCookie } from "@/app/lib/cookie";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  setCookie("auth_access_token", "");
+  deleteCookie("access_token_auth");
   const response = NextResponse.json({
     status: "success",
     accessToken: "",
